@@ -1,0 +1,4 @@
+rootProject.name = 'telematix'
+include 'web'
+include 'domain'
+
