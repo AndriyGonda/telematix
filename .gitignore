@@ -1,0 +1,8 @@
+# idea files and output files
+.idea
+out
+*.iml
+/build
+.gradle
+!gradle-wrapper.jar
+*.log

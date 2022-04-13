@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'checkstyle'
+}
+
+group 'org.telematix'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+
+checkstyle {
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+}
+
+allprojects {
+    apply plugin: 'checkstyle'
+    checkstyle {
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        maxWarnings = 0
+        toolVersion = '9.0.1'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
