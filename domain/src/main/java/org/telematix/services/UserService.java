@@ -2,6 +2,7 @@ package org.telematix.services;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.telematix.dto.user.UserResponseDto;
 import org.telematix.models.User;
 import org.telematix.repositories.ModelRepository;
 
@@ -13,7 +14,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.getAll();
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.getAll()
+                .stream()
+                .map(UserResponseDto::new).toList();
     }
 }
