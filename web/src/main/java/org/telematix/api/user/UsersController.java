@@ -27,7 +27,7 @@ public class UsersController {
 
     @PostMapping
     public UserResponseDto createUser(@RequestBody UserCreateDto userCreateDto) {
-        System.out.println(userCreateDto);
+        userService.createUser(userCreateDto);
         return new UserResponseDto(new User());
     }
 }

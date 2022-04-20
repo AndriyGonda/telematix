@@ -1,6 +1,6 @@
 package org.telematix.validators;
 
-public class ValidationException extends Exception {
+public class ValidationException extends RuntimeException {
     public ValidationException(String message) {
         super(message);
     }

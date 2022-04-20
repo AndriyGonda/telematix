@@ -13,6 +13,7 @@ import org.telematix.repositories.mapper.UserMapper;
 public class UserRepository implements ModelRepository<User> {
     private static final String SELECT_USER_BY_ID = "SELECT * FROM users WHERE id=:id";
     private static final String SELECT_ALL_USERS = "SELECT * FROM users";
+    public static final String INSERT_USER_QUERY = "INSERT INTO users(username, email, administrator, password_hash, first_name, last_name, avatar_url) VALUES(:username, :email, :administrator, :password_hash, :first_name, :last_name, :avatar_url) RETURNING id";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -34,7 +35,17 @@ public class UserRepository implements ModelRepository<User> {
 
     @Override
     public Optional<User> saveItem(User item) {
-        return Optional.empty();
+        Map<String, Object> userParameters = new HashMap<>();
+        userParameters.put("username", item.getUsername());
+        userParameters.put("email", item.getEmail());
+        userParameters.put("administrator", item.isAdministrator());
+        userParameters.put("password_hash", item.getPasswordHash());
+        userParameters.put("first_name", item.getFirstName());
+        userParameters.put("last_name", item.getLastName());
+        userParameters.put("avatar_url", item.getAvatarUrl());
+        int user_id = jdbcTemplate.update(INSERT_USER_QUERY, userParameters);
+        item.setId(user_id);
+        return Optional.of(item);
     }
 
     @Override
