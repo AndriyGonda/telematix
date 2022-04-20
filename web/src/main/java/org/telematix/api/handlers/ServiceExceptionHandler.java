@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.telematix.services.ItemNotFoundException;
 import org.telematix.services.ServiceException;
-import org.telematix.validators.ValidationException;
 
 @ControllerAdvice
 public class ServiceExceptionHandler {
@@ -26,5 +26,14 @@ public class ServiceExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         body.put("message", e.getMessage());
         return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ItemNotFoundException.class)
+    @ResponseBody
+    public ResponseEntity<Object> handleItemNotFoundError(ItemNotFoundException e) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", e.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 }

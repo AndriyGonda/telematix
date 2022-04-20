@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -29,9 +30,13 @@ public class UserRepository implements ModelRepository<User> {
 
     @Override
     public Optional<User> getById(int itemId) {
-        Map<String, Integer> parameters = new HashMap<>();
-        parameters.put("id", itemId);
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_USER_BY_ID, parameters, new UserMapper()));
+        try {
+            Map<String, Integer> parameters = new HashMap<>();
+            parameters.put("id", itemId);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_USER_BY_ID, parameters, new UserMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

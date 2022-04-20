@@ -7,6 +7,11 @@ public class UserCreateDto {
     private  String firstName;
     private  String lastName;
     private  String avatarUrl;
+    private boolean administrator;
+
+    public boolean isAdministrator() {
+        return administrator;
+    }
 
     public String getFirstName() {
         return firstName;
