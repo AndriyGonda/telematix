@@ -40,7 +40,7 @@ public class DatabaseConfig {
                 port,
                 dbName
         ));
-        config.setAutoCommit(false);
+        config.setAutoCommit(true);
         return new HikariDataSource(config);
     }
 

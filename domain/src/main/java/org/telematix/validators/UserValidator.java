@@ -2,7 +2,7 @@ package org.telematix.validators;
 
 import org.telematix.dto.user.UserCreateDto;
 
-public class UserCreateValidator extends DtoValidator<UserCreateDto> {
+public class UserValidator extends DtoValidator<UserCreateDto> {
     private final static int MIN_USERNAME_LENGTH = 2;
     private final static int MIN_PASSWORD_LENGTH = 6;
     private final static int MIN_EMAIL_LENGTH = 3;

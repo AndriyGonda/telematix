@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.telematix.dto.user.UserCreateDto;
 import org.telematix.dto.user.UserResponseDto;
-import org.telematix.models.User;
 import org.telematix.services.UserService;
 
 @RestController
@@ -27,7 +26,6 @@ public class UsersController {
 
     @PostMapping
     public UserResponseDto createUser(@RequestBody UserCreateDto userCreateDto) {
-        userService.createUser(userCreateDto);
-        return new UserResponseDto(new User());
+        return userService.createUser(userCreateDto);
     }
 }
