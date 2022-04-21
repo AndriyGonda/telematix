@@ -9,6 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface DtoField {
     String name();
-
     Class<?> type();
 }
