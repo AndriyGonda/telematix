@@ -3,12 +3,12 @@ package org.telematix.dto.user;
 import org.telematix.models.User;
 
 public class UserCreateDto {
-    private  String username;
-    private  String email;
-    private  String password;
-    private  String firstName;
-    private  String lastName;
-    private  String avatarUrl;
+    private String username;
+    private String email;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String avatarUrl;
     private boolean administrator;
 
     public boolean isAdministrator() {
@@ -41,6 +41,7 @@ public class UserCreateDto {
 
     public UserCreateDto() {
     }
+
     public User toModel() {
         User user = new User();
         user.setEmail(email);
