@@ -1,5 +1,7 @@
 package org.telematix.dto.user;
 
+import org.telematix.models.User;
+
 public class UserCreateDto {
     private  String username;
     private  String email;
@@ -38,5 +40,11 @@ public class UserCreateDto {
     }
 
     public UserCreateDto() {
+    }
+    public User toModel() {
+        User user = new User();
+        user.setEmail(email);
+        user.setUsername(username);
+        return user;
     }
 }

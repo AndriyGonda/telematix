@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.telematix.dto.user.UserCreateDto;
 import org.telematix.dto.user.UserResponseDto;
+import org.telematix.dto.user.UserUpdateDto;
 import org.telematix.models.User;
 import org.telematix.repositories.ModelRepository;
 import org.telematix.repositories.RepositoryException;
@@ -37,9 +38,7 @@ public class UserService {
 
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
         createDtoValidator.validate(userCreateDto);
-        User user = new User();
-        user.setEmail(userCreateDto.getEmail());
-        user.setUsername(userCreateDto.getUsername());
+        User user = userCreateDto.toModel();
         user.setPasswordHash(userCreateDto.getPassword());
 
         try {
@@ -52,6 +51,16 @@ public class UserService {
         } catch (RepositoryException e) {
             throw new ServiceException(String.format(USER_CREATION_FAILED, e.getMessage()));
         }
+    }
 
+    public UserResponseDto updateUser(int userId, UserUpdateDto userUpdateDto) {
+        User user = userUpdateDto.toModel();
+        Optional<User> optionalUser = userRepository.updateItem(userId, user);
+        if (optionalUser.isEmpty()) throw  new ItemNotFoundException(USER_NOT_FOUND);
+        return new UserResponseDto(optionalUser.get());
+    }
+
+    public void deleteUser(int userId) {
+        userRepository.deleteItem(userId);
     }
 }
