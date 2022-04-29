@@ -3,13 +3,11 @@ package org.telematix.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.core.MessageProducer;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHandler;
 
 @PropertySource("classpath:application.properties")
 public class MqttConfig {
@@ -33,14 +31,5 @@ public class MqttConfig {
         adapter.setQos(1);
         adapter.setOutputChannel(mqttInputChannel);
         return adapter;
-    }
-
-    @Bean
-    @ServiceActivator(inputChannel = "mqttInputChannel")
-    public MessageHandler handler() {
-        return message -> {
-            System.out.println(message.getHeaders().get("mqtt_receivedTopic"));
-            System.out.println(message.getPayload());
-        };
     }
 }
