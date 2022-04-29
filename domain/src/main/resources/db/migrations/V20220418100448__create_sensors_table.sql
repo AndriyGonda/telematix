@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS sensors
 (
     id          INT GENERATED ALWAYS AS IDENTITY,
     title       VARCHAR(255),
-    topic       VARCHAR(255),
+    topic       VARCHAR(255) UNIQUE,
     sensor_type VARCHAR(30),
     device_id   int,
     PRIMARY KEY (id),
