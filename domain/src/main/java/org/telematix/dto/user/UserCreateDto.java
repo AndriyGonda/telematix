@@ -35,6 +35,10 @@ public class UserCreateDto {
         return email;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -46,6 +50,9 @@ public class UserCreateDto {
         User user = new User();
         user.setEmail(email);
         user.setUsername(username);
+        user.setPasswordHash(password);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         return user;
     }
 }

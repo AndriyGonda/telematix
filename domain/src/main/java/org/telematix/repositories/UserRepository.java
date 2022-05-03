@@ -19,6 +19,7 @@ public class UserRepository implements ModelRepository<User> {
     private static final String USER_ALREADY_EXISTS = "User already exists";
     public static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id=:userId";
     public static final String UPDATE_USER_QUERY = "UPDATE users SET administrator=:administrator, first_name=:first_name, last_name=:last_name, avatar_url=:avatar_url WHERE id=:user_id";
+    public static final String SELECT_USER_BY_USERNAME = "SELECT * FROM users WHERE username=:username";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public UserRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -80,5 +81,11 @@ public class UserRepository implements ModelRepository<User> {
         Map<String, Integer> userParameterMap = new HashMap<>();
         userParameterMap.put("userId", itemId);
         jdbcTemplate.update(DELETE_USER_QUERY, userParameterMap);
+    }
+
+    public Optional<User> findByUsername(String username) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("username", username);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_USER_BY_USERNAME, parameters, new UserMapper()));
     }
 }
