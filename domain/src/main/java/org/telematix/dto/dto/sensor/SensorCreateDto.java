@@ -1,6 +1,5 @@
 package org.telematix.dto.dto.sensor;
 
-import org.telematix.models.sensor.Sensor;
 import org.telematix.models.sensor.SensorType;
 
 public class SensorCreateDto {
