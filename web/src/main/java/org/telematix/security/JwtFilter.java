@@ -17,6 +17,8 @@ import org.telematix.services.UserDetailService;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+    private static final String INVALID_JWT_TOKEN_IN_BEARER_HEADER = "Invalid JWT Token in Bearer Header";
+    private static final String INVALID_JWT_TOKEN = "Invalid JWT Token";
     private final UserDetailService userDetailService;
     private final JwtUtil jwtUtil;
 
@@ -28,10 +30,10 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        if (!Objects.isNull(authHeader) && authHeader.isBlank() && authHeader.startsWith("Bearer ")) {
+        if (!Objects.isNull(authHeader)) {
             String jwt = authHeader.substring(7);
             if (jwt.isBlank()) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT Token in Bearer Header");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, INVALID_JWT_TOKEN_IN_BEARER_HEADER);
             }
             try {
                 String username = jwtUtil.validateTokenAndRetrieveUsername(jwt);
@@ -42,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     securityContext.setAuthentication(authToken);
                 }
             } catch (JWTVerificationException exception) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT Token");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, INVALID_JWT_TOKEN);
             }
         }
         filterChain.doFilter(request, response);
