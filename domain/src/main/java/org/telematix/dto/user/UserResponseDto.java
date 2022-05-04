@@ -9,6 +9,7 @@ public class UserResponseDto {
     private final String firstName;
     private final String lastName;
     private final String avatarUrl;
+    private final boolean administrator;
 
     public UserResponseDto(User instance) {
         id = instance.getId();
@@ -17,6 +18,11 @@ public class UserResponseDto {
         firstName = instance.getFirstName();
         lastName = instance.getLastName();
         avatarUrl = instance.getAvatarUrl();
+        administrator = instance.isAdministrator();
+    }
+
+    public boolean isAdministrator() {
+        return administrator;
     }
 
     public int getId() {
