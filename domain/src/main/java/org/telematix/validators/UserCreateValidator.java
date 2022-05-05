@@ -3,8 +3,8 @@ package org.telematix.validators;
 import org.telematix.dto.user.UserCreateDto;
 
 public class UserCreateValidator extends DtoValidator<UserCreateDto> {
-    private static final  int MIN_USERNAME_LENGTH = 2;
-    private static  final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_USERNAME_LENGTH = 2;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_EMAIL_LENGTH = 3;
 
     @DtoField(name = "username", type = String.class)
