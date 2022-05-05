@@ -3,6 +3,7 @@ package org.telematix.api.user;
 import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.telematix.dto.user.UserResponseDto;
 import org.telematix.dto.user.UserUpdateDto;
 import org.telematix.services.UserService;
 
+@Tag(name = "Users {ADMIN role required}")
 @RestController
 @RequestMapping("/api")
 public class UsersController {

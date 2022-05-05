@@ -8,6 +8,6 @@ public class DeviceCreateValidator extends DtoValidator<DeviceCreateDto> {
     @DtoField(name = "name", type = String.class)
     private final Validator<String> nameValidator = new StringValidator(NAME_MIN_LENGTH);
 
-    @DtoField(name = "gps", type = Boolean.class)
+    @DtoField(name = "gps", type = Object.class)
     private final Validator<Boolean> gpsValidator = new NotNullValidator<>();
 }

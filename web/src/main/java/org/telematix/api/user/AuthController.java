@@ -2,6 +2,7 @@ package org.telematix.api.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.telematix.dto.user.LoginDto;
 import org.telematix.dto.user.ProfileUpdateDto;
@@ -19,12 +19,12 @@ import org.telematix.dto.user.RegisterDto;
 import org.telematix.dto.user.TokenResponseDto;
 import org.telematix.dto.user.UserCreateDto;
 import org.telematix.dto.user.UserResponseDto;
-import org.telematix.dto.user.UserUpdateDto;
 import org.telematix.security.JwtUtil;
 import org.telematix.services.AuthService;
 import org.telematix.services.ServiceException;
 import org.telematix.services.UserService;
 
+@Tag(name = "Auth")
 @RestController
 @RequestMapping("/api")
 public class AuthController {

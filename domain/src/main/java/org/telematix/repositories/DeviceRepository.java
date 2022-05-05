@@ -18,7 +18,7 @@ public class DeviceRepository implements ModelRepository<Device> {
     private static final String UPDATE_DEVICE = "UPDATE devices SET name=:name, user_id=:user_id, gps=:gps WHERE id=:deviceId";
     private static final String DELETE_DEVICE = "DELETE FROM devices WHERE id=:deviceId";
     private static final String SELECT_DEVICES_BY_USER_ID = "SELECT * FROM devices WHERE user_id=:userId";
-    public static final String SELECT_DEVICE_FOR_USER = "SELECT * FROM devices WHERE id=:itemId AND user_id=:userId";
+    public static final String SELECT_DEVICE_FOR_USER = "SELECT * FROM devices WHERE id=:deviceId AND user_id=:userId";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public DeviceRepository(NamedParameterJdbcTemplate jdbcTemplate) {
