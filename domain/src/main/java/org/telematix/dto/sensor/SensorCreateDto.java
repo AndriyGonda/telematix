@@ -1,12 +1,12 @@
-package org.telematix.dto.dto.sensor;
+package org.telematix.dto.sensor;
 
+import org.telematix.models.sensor.Sensor;
 import org.telematix.models.sensor.SensorType;
 
 public class SensorCreateDto {
     private SensorType sensorType;
     private String topic;
     private String title;
-    private int deviceId;
 
     public void setSensorType(SensorType sensorType) {
         this.sensorType = sensorType;
@@ -20,9 +20,12 @@ public class SensorCreateDto {
         this.title = title;
     }
 
-    public void setDeviceId(int deviceId) {
-        this.deviceId = deviceId;
+    public Sensor toModel() {
+        Sensor sensor = new Sensor();
+        sensor.setTopic(topic);
+        sensor.setTitle(title);
+        sensor.setSensorType(sensorType);
+        return sensor;
     }
-
 
 }

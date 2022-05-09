@@ -1,4 +1,4 @@
-package org.telematix.dto.dto.sensor;
+package org.telematix.dto.sensor;
 
 import org.telematix.models.sensor.Sensor;
 import org.telematix.models.sensor.SensorType;
