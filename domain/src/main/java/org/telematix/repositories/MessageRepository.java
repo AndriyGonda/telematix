@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.telematix.models.Message;
+import org.telematix.models.TopicMessage;
 
 @Repository
-public class MessageRepository implements ModelRepository<Message> {
+public class MessageRepository implements ModelRepository<TopicMessage> {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public MessageRepository(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -17,7 +17,7 @@ public class MessageRepository implements ModelRepository<Message> {
     }
 
     @Override
-    public Optional<Message> saveItem(Message item) {
+    public Optional<TopicMessage> saveItem(TopicMessage item) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("raw", item.getRaw());
         parameters.put("sensor_id", item.getSensorId());

@@ -33,8 +33,13 @@ public class SensorRepository implements ModelRepository<Sensor> {
     }
 
     public Optional<Sensor> getByTopic(String topic) {
-        Map<String, String> parameters = Collections.singletonMap("topic", topic);
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_SENSOR_BY_TOPIC, parameters, new SensorMapper()));
+        try {
+            Map<String, String> parameters = Collections.singletonMap("topic", topic);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_SENSOR_BY_TOPIC, parameters, new SensorMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
     }
 
     @Override
