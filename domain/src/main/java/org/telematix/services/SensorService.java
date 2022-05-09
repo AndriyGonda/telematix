@@ -52,7 +52,7 @@ public class SensorService {
     }
 
     public SensorResponseDto updateSensor(int deviceId, int sensorId, SensorUpdateDto sensorUpdateDto) {
-        DeviceResponseDto deviceResponseDto = deviceService.getUserDevice(deviceId);
+        deviceService.getUserDevice(deviceId);
         Optional<Sensor> sensorOptional = sensorRepository.updateItem(sensorId, sensorUpdateDto.toModel());
         if (sensorOptional.isEmpty()) throw new ItemNotFoundException(SENSOR_NOT_FOUND);
         Sensor sensor = sensorOptional.get();
