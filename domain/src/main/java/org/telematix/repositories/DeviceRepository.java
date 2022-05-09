@@ -1,10 +1,12 @@
 package org.telematix.repositories;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -26,18 +28,23 @@ public class DeviceRepository implements ModelRepository<Device> {
     }
 
     public List<Device> filterDevicesByUserId(int userId) {
-        return jdbcTemplate.query(SELECT_DEVICES_BY_USER_ID,
-                Collections.singletonMap("userId", userId),
-                new DeviceMapper()
-        );
+            return jdbcTemplate.query(SELECT_DEVICES_BY_USER_ID,
+                    Collections.singletonMap("userId", userId),
+                    new DeviceMapper()
+            );
     }
 
     public Optional<Device> getByUserAndId(int userId, int itemId) {
-        Map<String, Integer> parameters = new HashMap<>();
-        parameters.put("deviceId", itemId);
-        parameters.put("userId", userId);
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_DEVICE_FOR_USER, parameters, new DeviceMapper()));
+        try {
+            Map<String, Integer> parameters = new HashMap<>();
+            parameters.put("deviceId", itemId);
+            parameters.put("userId", userId);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_DEVICE_FOR_USER, parameters, new DeviceMapper()));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
+
     @Override
     public List<Device> getAll() {
         return jdbcTemplate.query(SELECT_DEVICES, new DeviceMapper());

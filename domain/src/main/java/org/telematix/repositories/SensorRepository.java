@@ -2,9 +2,11 @@ package org.telematix.repositories;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -16,17 +18,33 @@ public class SensorRepository implements ModelRepository<Sensor> {
     private static final String SELECT_SENSOR_BY_ID = "SELECT * FROM sensors WHERE id=:id";
     private static final String SENSOR_TOPIC_EXCEPTION_FORMATTER = "Sensor with topic %s already exists";
     private static final String DELETE_QUERY = "DELETE FROM sensors WHERE id:=id";
-    public static final String UPDATE_SENSOR_QUERY = "UPDATE sensors SET title=:title, topic=:topic, sensor_type=:sensor_type WHERE id=:item_id";
+    private static final String UPDATE_SENSOR_QUERY = "UPDATE sensors SET title=:title, topic=:topic, sensor_type=:sensor_type WHERE id=:item_id";
+    private static final String SELECT_SENSOR_BY_TOPIC = "SELECT * FROM sensors WHERE topic=:topic";
+    private static final String SELECT_DEVICE_SENSORS = "SELECT * FROM sensors WHERE device_id=:deviceId";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public SensorRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public List<Sensor> getSensorsByDevice(int deviceId) {
+        Map<String, Integer> parameters = Collections.singletonMap("deviceId", deviceId);
+        return jdbcTemplate.query(SELECT_DEVICE_SENSORS, parameters, new SensorMapper());
+    }
+
+    public Optional<Sensor> getByTopic(String topic) {
+        Map<String, String> parameters = Collections.singletonMap("topic", topic);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_SENSOR_BY_TOPIC, parameters, new SensorMapper()));
+    }
+
     @Override
     public Optional<Sensor> getById(int itemId) {
-        Map<String, Integer> parameters = Collections.singletonMap("id", itemId);
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_SENSOR_BY_ID, parameters, new SensorMapper()));
+        try {
+            Map<String, Integer> parameters = Collections.singletonMap("id", itemId);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_SENSOR_BY_ID, parameters, new SensorMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
