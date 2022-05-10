@@ -13,10 +13,11 @@ repositories {
 
 dependencies {
     implementation project(':utils')
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.postgresql:postgresql:42.3.4'
     implementation 'com.zaxxer:HikariCP:5.0.1'
     implementation 'org.slf4j:slf4j-simple:1.7.36'
-    implementation 'org.flywaydb:flyway-core:8.5.9'
+    implementation 'org.flywaydb:flyway-core:8.5.10'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
     implementation "org.springframework.integration:spring-integration-mqtt:5.5.11"
