@@ -1,9 +1,7 @@
 package org.telematix.models.sensor;
 
 public enum SensorType {
-    LATITUDE,
-    LONGITUDE,
-    ALTITUDE,
+    GPS_JSON,
     NUMBER,
     STRING
 }

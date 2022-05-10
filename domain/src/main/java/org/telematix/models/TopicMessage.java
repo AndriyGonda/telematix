@@ -3,7 +3,7 @@ package org.telematix.models;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class Message {
+public class TopicMessage {
     private int id;
     private String raw;
     private int sensorId;
@@ -45,7 +45,7 @@ public class Message {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Message message = (Message) o;
+        TopicMessage message = (TopicMessage) o;
         return id == message.id && sensorId == message.sensorId && Objects.equals(raw, message.raw) && Objects.equals(timestamp, message.timestamp);
     }
 
