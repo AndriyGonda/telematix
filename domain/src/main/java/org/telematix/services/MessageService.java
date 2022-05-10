@@ -13,7 +13,7 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Service;
 import org.telematix.dto.GeopositionDto;
 import org.telematix.models.TopicMessage;
-import org.telematix.models.sensor.SensorType;
+import org.telematix.models.sensor.Sensor;
 import org.telematix.repositories.MessageRepository;
 import org.telematix.repositories.SensorRepository;
 
@@ -21,6 +21,8 @@ import org.telematix.repositories.SensorRepository;
 public class MessageService {
     private static final String TIMESTAMP = "timestamp";
     private static final String MQTT_RECEIVED_TOPIC = "mqtt_receivedTopic";
+    private static final String FAILED_TO_DECODE_GPS_JSON = "Unable to save message with type GPS_JSON. Decoding failed";
+    private static final String FAILED_TO_DECODE_NUMBER = "Unable to save message with type NUMBER. Decoding failed";
     private final SensorRepository sensorRepository;
     private final MessageRepository messageRepository;
     private final Logger logger = LoggerFactory.getLogger(MessageService.class);
@@ -30,9 +32,9 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    private GeopositionDto parsePosition(String message) {
+    private void parsePosition(String message) {
         Gson gson = new Gson();
-        return gson.fromJson(message, GeopositionDto.class);
+        gson.fromJson(message, GeopositionDto.class);
     }
 
     @ServiceActivator(inputChannel = "mqttInputChannel")
@@ -47,17 +49,33 @@ public class MessageService {
                 topicMessage.setRaw(message.getPayload());
                 topicMessage.setSensorId(sensor.getId());
                 topicMessage.setTimestamp(Timestamp.from(Instant.ofEpochMilli(timestamp)));
-                if (!sensor.getSensorType().equals(SensorType.GPS_JSON)) {
-                    messageRepository.saveItem(topicMessage);
-                } else {
-                    try {
-                        parsePosition(message.getPayload());
-                        messageRepository.saveItem(topicMessage);
-                    } catch (JsonSyntaxException e) {
-                        logger.warn("Unable to save message with type GPS_JSON. Decoding failed");
-                    }
-                }
+                verifyAndSaveMessage(message, sensor, topicMessage);
             }
         });
+    }
+
+    private void verifyAndSaveMessage(Message<String> message, Sensor sensor, TopicMessage topicMessage) {
+        switch (sensor.getSensorType()) {
+            case GPS_JSON -> {
+                try {
+                    parsePosition(message.getPayload());
+                    messageRepository.saveItem(topicMessage);
+                } catch (JsonSyntaxException e) {
+                    logger.warn(FAILED_TO_DECODE_GPS_JSON);
+                }
+            }
+            case NUMBER -> {
+                try {
+                    logger.info("Received number {}", Float.parseFloat(message.getPayload()));
+                    messageRepository.saveItem(topicMessage);
+                } catch (NumberFormatException e) {
+                    logger.warn(FAILED_TO_DECODE_NUMBER);
+                }
+            }
+            case STRING -> {
+                logger.info("Received string '{}'", message.getPayload());
+                messageRepository.saveItem(topicMessage);
+            }
+        }
     }
 }
