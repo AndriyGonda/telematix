@@ -1,16 +1,20 @@
 package org.telematix.services;
 
+import com.google.gson.Gson;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.telematix.dto.GeopositionDto;
 import org.telematix.dto.device.DeviceResponseDto;
 import org.telematix.dto.message.TopicMessageDto;
+import org.telematix.dto.report.GpsResponseDto;
 import org.telematix.dto.sensor.SensorCreateDto;
 import org.telematix.dto.sensor.SensorResponseDto;
 import org.telematix.dto.sensor.SensorUpdateDto;
 import org.telematix.models.TopicMessage;
 import org.telematix.models.sensor.Sensor;
+import org.telematix.models.sensor.SensorType;
 import org.telematix.repositories.MessageRepository;
 import org.telematix.repositories.SensorRepository;
 import org.telematix.validators.SensorCreateValidator;
@@ -22,6 +26,7 @@ public class SensorService {
     private static final String SENSOR_NOT_FOUND = "Sensor not found.";
     private static final String SENSOR_IS_NOT_PART_OF_DEVICE = "Sensor is not part of device.";
     private static final String MESSAGE_NOT_FOUND = "Message not found";
+    public static final String NON_GPS_SENSOR_TYPE = "Invalid sensor type for GPS coordinates report.";
     private final SensorRepository sensorRepository;
     private final MessageRepository messageRepository;
     private final DeviceService deviceService;
@@ -89,4 +94,20 @@ public class SensorService {
                 .stream()
                 .map(TopicMessageDto::new).toList();
     }
+
+    public List<GpsResponseDto> getGpsReport(int deviceId, int sensorId, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        SensorResponseDto sensor = getSensorById(deviceId, sensorId);
+        if (!sensor.getSensorType().equals(SensorType.GPS_JSON)) throw new ServiceException(NON_GPS_SENSOR_TYPE);
+        List<TopicMessageDto> messages = getMessagesByInterval(deviceId, sensorId, dateFrom, dateTo);
+        Gson gson = new Gson();
+        return messages.stream().map(message -> {
+            GeopositionDto location = gson.fromJson(message.getRaw(), GeopositionDto.class);
+            GpsResponseDto gpsMessage = new GpsResponseDto();
+            gpsMessage.setLatitude(location.getLatitude());
+            gpsMessage.setLongitude(location.getLongitude());
+            gpsMessage.setTimestamp(message.getTimestamp());
+            return gpsMessage;
+        }).toList();
+    }
+
 }

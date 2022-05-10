@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.telematix.dto.message.TopicMessageDto;
+import org.telematix.dto.report.GpsResponseDto;
 import org.telematix.dto.sensor.SensorCreateDto;
 import org.telematix.dto.sensor.SensorResponseDto;
 import org.telematix.dto.sensor.SensorUpdateDto;
@@ -84,5 +85,16 @@ public class SensorController {
             @RequestParam("dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTo
     ) {
         return sensorService.getMessagesByInterval(deviceId, sensorId, dateFrom, dateTo);
+    }
+
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/device/{deviceId}/sensor/{sensorId}/report/gps")
+    public List<GpsResponseDto> getGpsReport(
+            @PathVariable("deviceId") int deviceId,
+            @PathVariable("sensorId") int sensorId,
+            @RequestParam("dateFrom")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTo
+    ) {
+        return sensorService.getGpsReport(deviceId, sensorId, dateFrom, dateTo);
     }
 }
