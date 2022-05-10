@@ -9,6 +9,8 @@ import org.telematix.dto.GeopositionDto;
 import org.telematix.dto.device.DeviceResponseDto;
 import org.telematix.dto.message.TopicMessageDto;
 import org.telematix.dto.report.GpsResponseDto;
+import org.telematix.dto.report.number.NumberResponseDto;
+import org.telematix.dto.report.number.NumbersReportDto;
 import org.telematix.dto.sensor.SensorCreateDto;
 import org.telematix.dto.sensor.SensorResponseDto;
 import org.telematix.dto.sensor.SensorUpdateDto;
@@ -27,6 +29,7 @@ public class SensorService {
     private static final String SENSOR_IS_NOT_PART_OF_DEVICE = "Sensor is not part of device.";
     private static final String MESSAGE_NOT_FOUND = "Message not found";
     public static final String NON_GPS_SENSOR_TYPE = "Invalid sensor type for GPS coordinates report.";
+    public static final String NON_NUMBER_SENSOR_TYPE = "The sensor is not number sensor.";
     private final SensorRepository sensorRepository;
     private final MessageRepository messageRepository;
     private final DeviceService deviceService;
@@ -110,4 +113,27 @@ public class SensorService {
         }).toList();
     }
 
+    public NumbersReportDto getNumbersReport(int deviceId, int sensorId, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        SensorResponseDto sensor = getSensorById(deviceId, sensorId);
+        if (!sensor.getSensorType().equals(SensorType.NUMBER)) throw new ServiceException(NON_NUMBER_SENSOR_TYPE);
+        List<TopicMessageDto> messages = getMessagesByInterval(deviceId, sensorId, dateFrom, dateTo);
+        List<NumberResponseDto> numberMessages = messages.stream().map(topicMessageDto -> {
+            NumberResponseDto numberResponseDto = new NumberResponseDto();
+            numberResponseDto.setValue(Float.parseFloat(topicMessageDto.getRaw()));
+            numberResponseDto.setTimestamp(topicMessageDto.getTimestamp());
+            return numberResponseDto;
+        }).toList();
+        return getNumbersReportDto(numberMessages);
+    }
+
+    private NumbersReportDto getNumbersReportDto(List<NumberResponseDto> numberMessages) {
+        List<Float> values = numberMessages.stream().map(NumberResponseDto::getValue).toList();
+        NumbersReportDto numbersReportDto = new NumbersReportDto();
+        numbersReportDto.setMaxValue(values.stream().mapToDouble(value -> value).max().orElse(0));
+        numbersReportDto.setMinValue(values.stream().mapToDouble(value -> value).min().orElse(0));
+        numbersReportDto.setAverageValue(values.stream().mapToDouble(value -> value).average().orElse(0));
+        numbersReportDto.setTotal(values.stream().mapToDouble(value -> value).sum());
+        numbersReportDto.setMessages(numberMessages);
+        return numbersReportDto;
+    }
 }
