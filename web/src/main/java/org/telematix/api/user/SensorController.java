@@ -1,16 +1,20 @@
 package org.telematix.api.user;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.telematix.dto.message.TopicMessageDto;
 import org.telematix.dto.sensor.SensorCreateDto;
 import org.telematix.dto.sensor.SensorResponseDto;
 import org.telematix.dto.sensor.SensorUpdateDto;
@@ -60,5 +64,25 @@ public class SensorController {
             @PathVariable("sensorId") int sensorId
     ) {
         sensorService.deleteSensor(deviceId, sensorId);
+    }
+
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/device/{deviceId}/sensor/{sensorId}/value")
+    public TopicMessageDto getLatestMessage(
+            @PathVariable("deviceId") int deviceId,
+            @PathVariable("sensorId") int sensorId
+    ) {
+        return sensorService.getLatestMessage(deviceId, sensorId);
+    }
+
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/device/{deviceId}/sensor/{sensorId}/interval")
+    public List<TopicMessageDto> getMessagesByInterval(
+            @PathVariable("deviceId") int deviceId,
+            @PathVariable("sensorId") int sensorId,
+            @RequestParam("dateFrom")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTo
+    ) {
+        return sensorService.getMessagesByInterval(deviceId, sensorId, dateFrom, dateTo);
     }
 }

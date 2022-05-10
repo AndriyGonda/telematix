@@ -1,13 +1,17 @@
 package org.telematix.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.telematix.dto.device.DeviceResponseDto;
+import org.telematix.dto.message.TopicMessageDto;
 import org.telematix.dto.sensor.SensorCreateDto;
 import org.telematix.dto.sensor.SensorResponseDto;
 import org.telematix.dto.sensor.SensorUpdateDto;
+import org.telematix.models.TopicMessage;
 import org.telematix.models.sensor.Sensor;
+import org.telematix.repositories.MessageRepository;
 import org.telematix.repositories.SensorRepository;
 import org.telematix.validators.SensorCreateValidator;
 import org.telematix.validators.Validator;
@@ -15,14 +19,17 @@ import org.telematix.validators.Validator;
 @Service
 public class SensorService {
     private static final String SENSOR_WAS_NOT_CREATED = "Sensor was not created.";
-    public static final String SENSOR_NOT_FOUND = "Sensor not found.";
-    public static final String SENSOR_IS_NOT_PART_OF_DEVICE = "Sensor is not part of device.";
+    private static final String SENSOR_NOT_FOUND = "Sensor not found.";
+    private static final String SENSOR_IS_NOT_PART_OF_DEVICE = "Sensor is not part of device.";
+    private static final String MESSAGE_NOT_FOUND = "Message not found";
     private final SensorRepository sensorRepository;
+    private final MessageRepository messageRepository;
     private final DeviceService deviceService;
     private final Validator<SensorCreateDto> sensorCreateValidator = new SensorCreateValidator();
 
-    public SensorService(SensorRepository sensorRepository, DeviceService deviceService) {
+    public SensorService(SensorRepository sensorRepository, MessageRepository messageRepository, DeviceService deviceService) {
         this.sensorRepository = sensorRepository;
+        this.messageRepository = messageRepository;
         this.deviceService = deviceService;
     }
 
@@ -66,5 +73,20 @@ public class SensorService {
         if (sensorOptional.isEmpty()) return;
         if (sensorOptional.get().getDeviceId() != deviceId) throw new ServiceException(SENSOR_IS_NOT_PART_OF_DEVICE);
         sensorRepository.deleteItem(sensorId);
+    }
+
+    public TopicMessageDto getLatestMessage(int deviceId, int sensorId) {
+        SensorResponseDto sensor = getSensorById(deviceId, sensorId);
+        Optional<TopicMessage> topicMessageOptional = messageRepository.getLatestSensorMessage(sensor.getId());
+        if (topicMessageOptional.isEmpty()) throw new ItemNotFoundException(MESSAGE_NOT_FOUND);
+        return new TopicMessageDto(topicMessageOptional.get());
+    }
+
+    public List<TopicMessageDto> getMessagesByInterval(int deviceId, int sensorId, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        SensorResponseDto sensor = getSensorById(deviceId, sensorId);
+        return messageRepository
+                .getSensorMessagesByInterval(sensor.getId(), dateFrom, dateTo)
+                .stream()
+                .map(TopicMessageDto::new).toList();
     }
 }
