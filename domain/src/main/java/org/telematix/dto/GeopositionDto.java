@@ -1,8 +1,19 @@
 package org.telematix.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 public class GeopositionDto {
+    @SerializedName("lat")
     private float latitude;
+    @SerializedName("lon")
     private float longitude;
+
+    @SerializedName("_type")
+    private String type;
+
+    public String getType() {
+        return type;
+    }
 
     public float getLatitude() {
         return latitude;

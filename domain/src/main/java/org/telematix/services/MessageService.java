@@ -32,9 +32,9 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    private void parsePosition(String message) {
+    private GeopositionDto parsePosition(String message) {
         Gson gson = new Gson();
-        gson.fromJson(message, GeopositionDto.class);
+        return gson.fromJson(message, GeopositionDto.class);
     }
 
     @ServiceActivator(inputChannel = "mqttInputChannel")
@@ -58,8 +58,10 @@ public class MessageService {
         switch (sensor.getSensorType()) {
             case GPS_JSON -> {
                 try {
-                    parsePosition(message.getPayload());
-                    messageRepository.saveItem(topicMessage);
+                    GeopositionDto position = parsePosition(message.getPayload());
+                    if (position.getType().equals("location")) {
+                        messageRepository.saveItem(topicMessage);
+                    }
                 } catch (JsonSyntaxException e) {
                     logger.warn(FAILED_TO_DECODE_GPS_JSON);
                 }
