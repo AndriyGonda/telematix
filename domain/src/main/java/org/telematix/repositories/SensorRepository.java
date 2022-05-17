@@ -17,7 +17,7 @@ import org.telematix.repositories.mapper.SensorMapper;
 public class SensorRepository implements ModelRepository<Sensor> {
     private static final String SELECT_SENSOR_BY_ID = "SELECT * FROM sensors WHERE id=:id";
     private static final String SENSOR_TOPIC_EXCEPTION_FORMATTER = "Sensor with topic %s already exists";
-    private static final String DELETE_QUERY = "DELETE FROM sensors WHERE id:=id";
+    private static final String DELETE_QUERY = "DELETE FROM sensors WHERE id=:id";
     private static final String UPDATE_SENSOR_QUERY = "UPDATE sensors SET title=:title, topic=:topic, sensor_type=:sensor_type WHERE id=:item_id";
     private static final String SELECT_SENSOR_BY_TOPIC = "SELECT * FROM sensors WHERE topic=:topic";
     private static final String SELECT_DEVICE_SENSORS = "SELECT * FROM sensors WHERE device_id=:deviceId";
