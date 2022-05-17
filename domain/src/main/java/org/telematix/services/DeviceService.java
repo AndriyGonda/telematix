@@ -48,7 +48,9 @@ public class DeviceService {
     public DeviceResponseDto updateDevice(int deviceId, DeviceUpdateDto deviceUpdateDto) {
         Optional<Device> optionalDevice = deviceRepository.getByUserAndId(authService.getAuthUser().getId(), deviceId);
         if (optionalDevice.isEmpty()) throw new ItemNotFoundException(DEVICE_NOT_FOUND);
-        Optional<Device> updatedDevice = deviceRepository.updateItem(deviceId, deviceUpdateDto.toModel());
+        Device updateDevice = deviceUpdateDto.toModel();
+        updateDevice.setUserId(optionalDevice.get().getUserId());
+        Optional<Device> updatedDevice = deviceRepository.updateItem(deviceId, updateDevice);
         if (updatedDevice.isEmpty()) throw new ItemNotFoundException(DEVICE_NOT_FOUND);
         return new DeviceResponseDto(updatedDevice.get());
     }

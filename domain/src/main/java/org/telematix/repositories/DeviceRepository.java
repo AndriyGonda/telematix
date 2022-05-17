@@ -35,14 +35,10 @@ public class DeviceRepository implements ModelRepository<Device> {
     }
 
     public Optional<Device> getByUserAndId(int userId, int itemId) {
-        try {
             Map<String, Integer> parameters = new HashMap<>();
             parameters.put("deviceId", itemId);
             parameters.put("userId", userId);
             return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_DEVICE_FOR_USER, parameters, new DeviceMapper()));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
     }
 
     @Override
@@ -79,7 +75,7 @@ public class DeviceRepository implements ModelRepository<Device> {
         deviceParameters.put("user_id", item.getUserId());
         deviceParameters.put("gps", item.isGps());
         jdbcTemplate.update(UPDATE_DEVICE, deviceParameters);
-        return ModelRepository.super.updateItem(itemId, item);
+        return getById(itemId);
     }
 
     @Override
