@@ -78,7 +78,7 @@ public class SensorRepository implements ModelRepository<Sensor> {
             sensorParameters.put("item_id", itemId);
             sensorParameters.put("title", item.getTitle());
             sensorParameters.put("topic", item.getTopic());
-            sensorParameters.put("sensor_type", item.getSensorType());
+            sensorParameters.put("sensor_type", item.getSensorType().toString());
             jdbcTemplate.update(UPDATE_SENSOR_QUERY, sensorParameters);
             return getById(itemId);
         } catch (DuplicateKeyException e) {
