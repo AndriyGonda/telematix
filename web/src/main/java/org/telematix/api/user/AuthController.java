@@ -3,6 +3,7 @@ package org.telematix.api.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.telematix.dto.user.LoginDto;
 import org.telematix.dto.user.ProfileUpdateDto;
 import org.telematix.dto.user.RegisterDto;
@@ -77,5 +81,14 @@ public class AuthController {
     @PutMapping("/profile")
     public UserResponseDto updateProfile(@RequestBody ProfileUpdateDto userUpdateDto) {
         return authService.updateProfile(userUpdateDto);
+    }
+
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @PostMapping(path="/profile/avatar",
+            consumes = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
+    )
+    public String uploadAvatar(@RequestPart("file") MultipartFile file) {
+        System.out.println(file);
+        return "uploaded";
     }
 }

@@ -6,3 +6,5 @@ out
 .gradle
 !gradle-wrapper.jar
 *.log
+/.run/
+.env
