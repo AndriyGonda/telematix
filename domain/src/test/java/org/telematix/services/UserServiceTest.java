@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.telematix.dto.user.UserCreateDto;
 import org.telematix.dto.user.UserResponseDto;
+import org.telematix.models.User;
 import org.telematix.repositories.UserRepository;
 import org.telematix.validators.ValidationException;
 
@@ -73,5 +74,27 @@ class UserServiceTest {
         createUserDto.setPassword("password");
         doReturn(Optional.empty()).when(userModelRepository).saveItem(createUserDto.toModel());
         assertThrows(ServiceException.class, () -> userService.createUser(createUserDto));
+    }
+
+    @Test
+    void get_user_by_id_without_errors() {
+        UserCreateDto createUserDto = new UserCreateDto();
+        createUserDto.setEmail("test");
+        createUserDto.setUsername("test");
+        createUserDto.setPassword("password");
+        User expectedUser = createUserDto.toModel();
+        expectedUser.setId(1);
+        doReturn(Optional.of(expectedUser)).when(userModelRepository).getById(1);
+        UserResponseDto userResponseDto = new UserResponseDto(expectedUser);
+
+        UserResponseDto actualUserDto = userService.getUserById(1);
+
+        assertEquals(userResponseDto, actualUserDto);
+    }
+
+    @Test
+    void get_user_by_id_failed_not_found() {
+        doReturn(Optional.empty()).when(userModelRepository).getById(1);
+        assertThrows(ItemNotFoundException.class, () -> userService.getUserById(1));
     }
 }
