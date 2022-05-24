@@ -1,8 +1,10 @@
 package org.telematix.services;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.telematix.dto.user.UserCreateDto;
 import org.telematix.dto.user.UserResponseDto;
+import org.telematix.dto.user.UserUpdateDto;
 import org.telematix.models.User;
+import org.telematix.repositories.RepositoryException;
 import org.telematix.repositories.UserRepository;
 import org.telematix.validators.ValidationException;
 
@@ -46,6 +50,16 @@ class UserServiceTest {
         createUserDto.setUsername("test");
         createUserDto.setPassword("p");
         assertThrows(ValidationException.class, () -> userService.createUser(createUserDto));
+    }
+
+    @Test
+    void create_user_failed_repository_exception() {
+        UserCreateDto createUserDto = new UserCreateDto();
+        createUserDto.setEmail("test");
+        createUserDto.setUsername("test");
+        createUserDto.setPassword("password");
+        doThrow(new RepositoryException("UNIQUE FAILED")).when(userModelRepository).saveItem(createUserDto.toModel());
+        assertThrows(ServiceException.class, () -> userService.createUser(createUserDto));
     }
 
     @Test
@@ -96,5 +110,42 @@ class UserServiceTest {
     void get_user_by_id_failed_not_found() {
         doReturn(Optional.empty()).when(userModelRepository).getById(1);
         assertThrows(ItemNotFoundException.class, () -> userService.getUserById(1));
+    }
+
+    @Test
+    void update_user_without_errors() {
+        User expectedUser = new User();
+        expectedUser.setId(1);
+        expectedUser.setFirstName("test");
+        expectedUser.setLastName("test");
+        expectedUser.setFirstName("test");
+        expectedUser.setLastName("test");
+
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setFirstName(expectedUser.getFirstName());
+        userUpdateDto.setLastName(expectedUser.getLastName());
+        doReturn(Optional.of(expectedUser)).when(userModelRepository).updateItem(1, userUpdateDto.toModel());
+        UserResponseDto actualResponseUser = userService.updateUser(1, userUpdateDto);
+        UserResponseDto expectedResponseUser = new UserResponseDto(expectedUser);
+        assertEquals(expectedResponseUser, actualResponseUser);
+    }
+
+    @Test
+    void update_user_failed_retrieve_empty() {
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setFirstName("test");
+        userUpdateDto.setLastName("test");
+        doReturn(Optional.empty()).when(userModelRepository).updateItem(1, userUpdateDto.toModel());
+        assertThrows(ItemNotFoundException.class, () -> userService.updateUser(1, userUpdateDto));
+    }
+
+    @Test
+    void delete_user_without_errors() {
+        assertDoesNotThrow(() -> userService.deleteUser(1));
+    }
+
+    @Test
+    void get_all_users_without_errors() {
+        assertDoesNotThrow(() -> userService.getAllUsers());
     }
 }

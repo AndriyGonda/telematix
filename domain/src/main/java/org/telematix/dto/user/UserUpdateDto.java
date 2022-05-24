@@ -24,6 +24,22 @@ public class UserUpdateDto {
         return avatarUrl;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public void setAdministrator(boolean administrator) {
+        this.administrator = administrator;
+    }
+
     public UserUpdateDto() {
     }
 
