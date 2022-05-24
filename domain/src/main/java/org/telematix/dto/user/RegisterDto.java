@@ -1,5 +1,6 @@
 package org.telematix.dto.user;
 
+import java.util.Objects;
 import org.telematix.models.User;
 
 public class RegisterDto {
@@ -43,5 +44,18 @@ public class RegisterDto {
         user.setEmail(email);
         user.setAdministrator(false);
         return user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RegisterDto that = (RegisterDto) o;
+        return Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(password, that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, email, password);
     }
 }

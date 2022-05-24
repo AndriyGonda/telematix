@@ -1,5 +1,6 @@
 package org.telematix.dto.user;
 
+import java.util.Objects;
 import org.telematix.models.User;
 
 public class UserCreateDto {
@@ -62,5 +63,18 @@ public class UserCreateDto {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         return user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserCreateDto that = (UserCreateDto) o;
+        return administrator == that.administrator && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(avatarUrl, that.avatarUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, email, password, firstName, lastName, avatarUrl, administrator);
     }
 }
