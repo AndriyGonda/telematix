@@ -6,6 +6,14 @@ public class DeviceCreateDto {
     private String name;
     private boolean gps;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGps(boolean gps) {
+        this.gps = gps;
+    }
+
     public String getName() {
         return name;
     }
