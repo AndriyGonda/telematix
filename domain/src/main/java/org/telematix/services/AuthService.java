@@ -28,6 +28,7 @@ public class AuthService {
         if (optionalUser.isEmpty()) throw new ItemNotFoundException(USER_WITH_CURRENT_PRINCIPAL_NOT_FOUND);
         return optionalUser.get();
     }
+
     public UserResponseDto loadProfile() {
         Optional<User> optionalUser = getUserByPrincipal();
         if (optionalUser.isEmpty()) throw new ItemNotFoundException(USER_WITH_CURRENT_PRINCIPAL_NOT_FOUND);
