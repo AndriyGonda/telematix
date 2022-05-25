@@ -1,5 +1,6 @@
 package org.telematix.dto.device;
 
+import java.util.Objects;
 import org.telematix.models.Device;
 
 public class DeviceResponseDto {
@@ -45,5 +46,18 @@ public class DeviceResponseDto {
 
     public void setGps(boolean gps) {
         this.gps = gps;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DeviceResponseDto that = (DeviceResponseDto) o;
+        return id == that.id && userId == that.userId && gps == that.gps && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, userId, gps);
     }
 }
