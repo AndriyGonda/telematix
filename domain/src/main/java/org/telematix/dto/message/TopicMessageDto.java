@@ -1,6 +1,7 @@
 package org.telematix.dto.message;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 import org.telematix.models.TopicMessage;
 
 public class TopicMessageDto {
@@ -36,5 +37,18 @@ public class TopicMessageDto {
         this.raw = topicMessage.getRaw();
         this.sensorId = topicMessage.getSensorId();
         this.timestamp = topicMessage.getTimestamp();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TopicMessageDto that = (TopicMessageDto) o;
+        return sensorId == that.sensorId && Objects.equals(raw, that.raw) && Objects.equals(timestamp, that.timestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(raw, sensorId, timestamp);
     }
 }

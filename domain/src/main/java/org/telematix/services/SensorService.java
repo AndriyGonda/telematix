@@ -18,6 +18,7 @@ import org.telematix.models.TopicMessage;
 import org.telematix.models.sensor.Sensor;
 import org.telematix.models.sensor.SensorType;
 import org.telematix.repositories.MessageRepository;
+import org.telematix.repositories.RepositoryException;
 import org.telematix.repositories.SensorRepository;
 import org.telematix.validators.SensorCreateValidator;
 import org.telematix.validators.Validator;
@@ -48,13 +49,18 @@ public class SensorService {
     }
 
     public SensorResponseDto createSensor(int deviceId, SensorCreateDto sensorCreateDto) {
-        DeviceResponseDto device = deviceService.getUserDevice(deviceId);
-        sensorCreateValidator.validate(sensorCreateDto);
-        Sensor sensor = sensorCreateDto.toModel();
-        sensor.setDeviceId(device.getId());
-        Optional<Sensor> optionalSensor = sensorRepository.saveItem(sensor);
-        if (optionalSensor.isEmpty()) throw new ItemNotFoundException(SENSOR_WAS_NOT_CREATED);
-        return new SensorResponseDto(optionalSensor.get());
+        try {
+            DeviceResponseDto device = deviceService.getUserDevice(deviceId);
+            sensorCreateValidator.validate(sensorCreateDto);
+            Sensor sensor = sensorCreateDto.toModel();
+            sensor.setDeviceId(device.getId());
+            Optional<Sensor> optionalSensor = sensorRepository.saveItem(sensor);
+            if (optionalSensor.isEmpty()) throw new ItemNotFoundException(SENSOR_WAS_NOT_CREATED);
+            return new SensorResponseDto(optionalSensor.get());
+        } catch (RepositoryException e) {
+            throw  new ServiceException(e.getMessage());
+        }
+
     }
 
     public SensorResponseDto getSensorById(int deviceId, int sensorId) {
@@ -67,12 +73,17 @@ public class SensorService {
     }
 
     public SensorResponseDto updateSensor(int deviceId, int sensorId, SensorUpdateDto sensorUpdateDto) {
-        deviceService.getUserDevice(deviceId);
-        Optional<Sensor> sensorOptional = sensorRepository.updateItem(sensorId, sensorUpdateDto.toModel());
-        if (sensorOptional.isEmpty()) throw new ItemNotFoundException(SENSOR_NOT_FOUND);
-        Sensor sensor = sensorOptional.get();
-        if (sensor.getDeviceId() != deviceId) throw new ServiceException(SENSOR_IS_NOT_PART_OF_DEVICE);
-        return new SensorResponseDto(sensor);
+        try {
+            deviceService.getUserDevice(deviceId);
+            Optional<Sensor> sensorOptional = sensorRepository.updateItem(sensorId, sensorUpdateDto.toModel());
+            if (sensorOptional.isEmpty()) throw new ItemNotFoundException(SENSOR_NOT_FOUND);
+            Sensor sensor = sensorOptional.get();
+            if (sensor.getDeviceId() != deviceId) throw new ServiceException(SENSOR_IS_NOT_PART_OF_DEVICE);
+            return new SensorResponseDto(sensor);
+        } catch (RepositoryException e) {
+            throw new ServiceException(e.getMessage());
+        }
+
     }
 
     public void deleteSensor(int deviceId, int sensorId) {
