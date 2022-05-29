@@ -3,6 +3,7 @@ package org.telematix.repositories;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
+import org.apache.logging.log4j.message.Message;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,5 +61,20 @@ public class TestContextConfiguration {
     @Bean
     UserRepository userRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         return new UserRepository(namedParameterJdbcTemplate);
+    }
+
+    @Bean
+    DeviceRepository deviceRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new DeviceRepository(namedParameterJdbcTemplate);
+    }
+
+    @Bean
+    SensorRepository sensorRepository(NamedParameterJdbcTemplate  namedParameterJdbcTemplate) {
+        return new SensorRepository(namedParameterJdbcTemplate);
+    }
+
+    @Bean
+    MessageRepository messageRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new MessageRepository(namedParameterJdbcTemplate);
     }
 }
