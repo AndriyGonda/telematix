@@ -1,5 +1,6 @@
 package org.telematix.services;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
@@ -15,7 +16,6 @@ import org.telematix.dto.device.DeviceResponseDto;
 import org.telematix.dto.message.TopicMessageDto;
 import org.telematix.dto.sensor.SensorCreateDto;
 import org.telematix.dto.sensor.SensorResponseDto;
-import org.telematix.dto.sensor.SensorUpdateDto;
 import org.telematix.models.Device;
 import org.telematix.models.TopicMessage;
 import org.telematix.models.sensor.Sensor;
@@ -150,4 +150,20 @@ class SensorServiceTest {
         assertThrows(ServiceException.class, () -> sensorService.createSensor(1, sensorCreateDto));
     }
 
+    @Test
+    void delete_sensor_without_errors() {
+        assertDoesNotThrow(() -> sensorService.deleteSensor(1, 1));
+    }
+
+    @Test
+    void delete_sensor_failed_is_not_part_of_device() {
+        Sensor sensor  = new Sensor();
+        sensor.setSensorType(SensorType.STRING);
+        sensor.setTopic("/test");
+        sensor.setTitle("test");
+        sensor.setId(1);
+        doReturn(Optional.of(sensor)).when(sensorRepository).getById(1);
+        doReturn(new DeviceResponseDto(device)).when(deviceService).getUserDevice(1);
+        assertThrows(ServiceException.class, () -> sensorService.deleteSensor(1, 1));
+    }
 }
