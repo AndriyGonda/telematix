@@ -86,8 +86,13 @@ public class UserRepository implements ModelRepository<User> {
     }
 
     public Optional<User> findByUsername(String username) {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("username", username);
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_USER_BY_USERNAME, parameters, new UserMapper()));
+        try {
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("username", username);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_USER_BY_USERNAME, parameters, new UserMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
     }
 }
