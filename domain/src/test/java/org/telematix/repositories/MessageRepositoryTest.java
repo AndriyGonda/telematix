@@ -60,20 +60,20 @@ class MessageRepositoryTest {
         user.setPasswordHash("test");
         Optional<User> userOptional = userRepository.saveItem(user);
         if (userOptional.isPresent()) {
-          User createdUser = userOptional.get();
-          Device device = new Device();
-          device.setUserId(createdUser.getId());
-          device.setName("test");
-          Optional<Device> deviceOptional = deviceRepository.saveItem(device);
-          if (deviceOptional.isPresent()) {
-              Device createdDevice = deviceOptional.get();
-              Sensor sensor = new Sensor();
-              sensor.setDeviceId(createdDevice.getId());
-              sensor.setSensorType(SensorType.STRING);
-              sensor.setTopic("test");
-              sensor.setTitle("test");
-              sensorRepository.saveItem(sensor).ifPresent(createdSensor -> sensorId = createdSensor.getId());
-          }
+            User createdUser = userOptional.get();
+            Device device = new Device();
+            device.setUserId(createdUser.getId());
+            device.setName("test");
+            Optional<Device> deviceOptional = deviceRepository.saveItem(device);
+            if (deviceOptional.isPresent()) {
+                Device createdDevice = deviceOptional.get();
+                Sensor sensor = new Sensor();
+                sensor.setDeviceId(createdDevice.getId());
+                sensor.setSensorType(SensorType.STRING);
+                sensor.setTopic("test");
+                sensor.setTitle("test");
+                sensorRepository.saveItem(sensor).ifPresent(createdSensor -> sensorId = createdSensor.getId());
+            }
         }
     }
 
