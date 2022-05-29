@@ -1,9 +1,11 @@
 package org.telematix.services;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -116,4 +118,19 @@ class DeviceServiceTest {
         assertThrows(ItemNotFoundException.class, () -> deviceService.updateDevice(1, deviceUpdateDto));
     }
 
+    @Test
+    void list_devices_without_errors() {
+        doReturn(List.of(new Device())).when(deviceRepository).filterDevicesByUserId(1);
+        assertDoesNotThrow(()->deviceService.listUserDevices());
+    }
+
+    @Test
+    void delete_device_without_errors() {
+        Device device = new Device();
+        device.setUserId(1);
+        device.setId(1);
+        device.setName("test");
+        doReturn(Optional.of(device)).when(deviceRepository).getByUserAndId(1, 1);
+        assertDoesNotThrow(() -> deviceService.deleteDevice(1));
+    }
 }
