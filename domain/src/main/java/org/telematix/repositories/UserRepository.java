@@ -61,6 +61,8 @@ public class UserRepository implements ModelRepository<User> {
             return Optional.of(item);
         } catch (DuplicateKeyException e) {
             throw new RepositoryException(USER_ALREADY_EXISTS);
+        } catch (Exception e) {
+            throw new RepositoryException(e.getMessage());
         }
     }
 
