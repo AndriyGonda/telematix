@@ -29,6 +29,13 @@ allprojects {
     }
 }
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.telematix.web.WebApplication'
+        )
+    }
+}
 test {
     useJUnitPlatform()
 }
