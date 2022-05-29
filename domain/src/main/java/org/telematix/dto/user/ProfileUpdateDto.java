@@ -30,6 +30,7 @@ public class ProfileUpdateDto {
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
+
     public User toModel() {
         User user = new User();
         user.setFirstName(firstName);

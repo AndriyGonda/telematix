@@ -4,8 +4,8 @@ import java.util.Objects;
 import org.telematix.models.User;
 
 public class RegisterDto {
-    private  String username;
-    private  String email;
+    private String username;
+    private String email;
     private String password;
 
     public void setUsername(String username) {
@@ -37,6 +37,7 @@ public class RegisterDto {
         this.email = email;
         this.password = password;
     }
+
     public User toModel() {
         User user = new User();
         user.setPasswordHash(password);

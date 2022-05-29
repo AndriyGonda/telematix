@@ -78,6 +78,7 @@ public class MessageService {
                 logger.info("Received string '{}'", message.getPayload());
                 messageRepository.saveItem(topicMessage);
             }
+            default -> logger.warn("Received string '{}'", message.getPayload());
         }
     }
 }

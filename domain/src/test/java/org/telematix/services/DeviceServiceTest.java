@@ -121,7 +121,7 @@ class DeviceServiceTest {
     @Test
     void list_devices_without_errors() {
         doReturn(List.of(new Device())).when(deviceRepository).filterDevicesByUserId(1);
-        assertDoesNotThrow(()->deviceService.listUserDevices());
+        assertDoesNotThrow(() -> deviceService.listUserDevices());
     }
 
     @Test

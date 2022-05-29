@@ -8,10 +8,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StorageService {
-  private final Resource resource;
 
     public StorageService(@Value("${images.folder}") String imagesPath) throws IOException {
-        this.resource = new ClassPathResource(imagesPath);
+        Resource resource = new ClassPathResource(imagesPath);
     }
 
 

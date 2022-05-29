@@ -1,6 +1,5 @@
 package org.telematix.repositories;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,17 +27,17 @@ public class DeviceRepository implements ModelRepository<Device> {
     }
 
     public List<Device> filterDevicesByUserId(int userId) {
-            return jdbcTemplate.query(SELECT_DEVICES_BY_USER_ID,
-                    Collections.singletonMap("userId", userId),
-                    new DeviceMapper()
-            );
+        return jdbcTemplate.query(SELECT_DEVICES_BY_USER_ID,
+                Collections.singletonMap("userId", userId),
+                new DeviceMapper()
+        );
     }
 
     public Optional<Device> getByUserAndId(int userId, int itemId) {
-            Map<String, Integer> parameters = new HashMap<>();
-            parameters.put("deviceId", itemId);
-            parameters.put("userId", userId);
-            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_DEVICE_FOR_USER, parameters, new DeviceMapper()));
+        Map<String, Integer> parameters = new HashMap<>();
+        parameters.put("deviceId", itemId);
+        parameters.put("userId", userId);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_DEVICE_FOR_USER, parameters, new DeviceMapper()));
     }
 
     @Override

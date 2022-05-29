@@ -1,10 +1,10 @@
 package org.telematix.api.user;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,7 +84,7 @@ public class SensorController {
     public List<TopicMessageDto> getMessagesByInterval(
             @PathVariable("deviceId") int deviceId,
             @PathVariable("sensorId") int sensorId,
-            @RequestParam("dateFrom")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
+            @RequestParam("dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
             @RequestParam("dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTo
     ) {
         return sensorService.getMessagesByInterval(deviceId, sensorId, dateFrom, dateTo);
@@ -95,7 +95,7 @@ public class SensorController {
     public List<GpsResponseDto> getGpsReport(
             @PathVariable("deviceId") int deviceId,
             @PathVariable("sensorId") int sensorId,
-            @RequestParam("dateFrom")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
+            @RequestParam("dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
             @RequestParam("dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTo
     ) {
         return sensorService.getGpsReport(deviceId, sensorId, dateFrom, dateTo);
@@ -106,7 +106,7 @@ public class SensorController {
     public NumbersReportDto getNumbersReport(
             @PathVariable("deviceId") int deviceId,
             @PathVariable("sensorId") int sensorId,
-            @RequestParam("dateFrom")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
+            @RequestParam("dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
             @RequestParam("dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTo
     ) {
         return sensorService.getNumbersReport(deviceId, sensorId, dateFrom, dateTo);
