@@ -99,4 +99,9 @@ class MessageRepositoryTest {
             });
         });
     }
+
+    @Test
+    void get_latest_message_failed_not_found() {
+        assertEquals(Optional.empty(), messageRepository.getLatestSensorMessage(sensorId));
+    }
 }
