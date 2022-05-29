@@ -128,6 +128,6 @@ public class UserRepositoryTest {
 
     @Test
     void get_users_without_errors() {
-        assertDoesNotThrow(()-> userRepository.getAll());
+        assertDoesNotThrow(() -> userRepository.getAll());
     }
 }
