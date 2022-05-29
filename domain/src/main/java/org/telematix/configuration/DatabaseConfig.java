@@ -12,34 +12,25 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @PropertySource("classpath:application.properties")
 public class DatabaseConfig {
-    private static final String DRIVER_CLASS_NAME = "org.postgresql.Driver";
 
     @Bean
     DataSource dataSource(
-            @Value("${database.host}")
-                    String host,
-
-            @Value("${database.port}")
-                    String port,
+            @Value("${database.driver}")
+                    String databaseDriver,
+            @Value("${database.url}")
+                    String datasourceUrl,
 
             @Value("${database.username}")
                     String username,
 
             @Value("${database.password}")
-                    String password,
-            @Value("${database.name}")
-                    String dbName
+                    String password
     ) {
         HikariConfig config = new HikariConfig();
-        config.setDriverClassName(DRIVER_CLASS_NAME);
+        config.setDriverClassName(databaseDriver);
         config.setUsername(username);
         config.setPassword(password);
-        config.setJdbcUrl(String.format(
-                "jdbc:postgresql://%s:%s/%s",
-                host,
-                port,
-                dbName
-        ));
+        config.setJdbcUrl(datasourceUrl);
         config.setAutoCommit(true);
         return new HikariDataSource(config);
     }
