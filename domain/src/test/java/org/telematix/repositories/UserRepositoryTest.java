@@ -1,5 +1,6 @@
 package org.telematix.repositories;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -123,5 +124,10 @@ public class UserRepositoryTest {
                 assertEquals(updateEntity, actualUser);
             });
         });
+    }
+
+    @Test
+    void get_users_without_errors() {
+        assertDoesNotThrow(()-> userRepository.getAll());
     }
 }
