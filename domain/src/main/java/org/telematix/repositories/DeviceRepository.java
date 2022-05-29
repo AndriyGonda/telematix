@@ -48,9 +48,13 @@ public class DeviceRepository implements ModelRepository<Device> {
 
     @Override
     public Optional<Device> getById(int itemId) {
-        Map<String, Integer> parameters = new HashMap<>();
-        parameters.put("id", itemId);
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_DEVICE_BY_ID, parameters, new DeviceMapper()));
+        try {
+            Map<String, Integer> parameters = new HashMap<>();
+            parameters.put("id", itemId);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_DEVICE_BY_ID, parameters, new DeviceMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
