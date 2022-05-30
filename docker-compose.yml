@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  backend:
+    working_dir: "/usr/src/app"
+    build: .
+    command: "/usr/src/app/gradlew :web:bootRun"
+    container_name: "telematix"
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
