@@ -18,8 +18,9 @@ public class UserRepository implements ModelRepository<User> {
     private static final String SELECT_ALL_USERS = "SELECT * FROM users";
     private static final String USER_ALREADY_EXISTS = "User already exists";
     public static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id=:userId";
-    public static final String UPDATE_USER_QUERY = "UPDATE users SET administrator=:administrator, first_name=:first_name, last_name=:last_name, avatar_url=:avatar_url WHERE id=:user_id";
+    public static final String UPDATE_USER_QUERY = "UPDATE users SET administrator=:administrator, first_name=:first_name, last_name=:last_name WHERE id=:user_id";
     public static final String SELECT_USER_BY_USERNAME = "SELECT * FROM users WHERE username=:username";
+    public static final String UPDATE_AVATAR_QUERY = "UPDATE users SET avatar_url=:avatar_url WHERE id=:user_id";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public UserRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -72,9 +73,17 @@ public class UserRepository implements ModelRepository<User> {
         userParameters.put("administrator", item.isAdministrator());
         userParameters.put("first_name", item.getFirstName());
         userParameters.put("last_name", item.getLastName());
-        userParameters.put("avatar_url", item.getAvatarUrl());
+//        userParameters.put("avatar_url", item.getAvatarUrl());
         userParameters.put("user_id", itemId);
         jdbcTemplate.update(UPDATE_USER_QUERY, userParameters);
+        return getById(itemId);
+    }
+
+    public Optional<User> updateAvatar(int itemId, String avatarUrl) {
+        Map<String, Object> userParameters = new HashMap<>();
+        userParameters.put("user_id", itemId);
+        userParameters.put("avatar_url", avatarUrl);
+        jdbcTemplate.update(UPDATE_AVATAR_QUERY, userParameters);
         return getById(itemId);
     }
 

@@ -1,7 +1,6 @@
 package org.telematix.services;
 
 import java.util.Optional;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,11 +53,9 @@ public class AuthService {
         Optional<User> optionalUser = getUserByPrincipal();
         if (optionalUser.isEmpty()) throw new ItemNotFoundException(USER_WITH_CURRENT_PRINCIPAL_NOT_FOUND);
         User user = optionalUser.get();
-        ProfileUpdateDto profileUpdateDto = new ProfileUpdateDto();
-        profileUpdateDto.setFirstName(user.getFirstName());
-        profileUpdateDto.setLastName(user.getLastName());
-        String avatarPath = storageService.saveImage(multipartFile);
-        profileUpdateDto.setAvatarUrl(FilenameUtils.getName(avatarPath));
-        return updateProfile(profileUpdateDto);
+        String avatarUrl = storageService.saveImage(multipartFile);
+        Optional<User> updatedUser = userRepository.updateAvatar(user.getId(), avatarUrl);
+        if (updatedUser.isEmpty()) throw new ItemNotFoundException(USER_NOT_FOUND_IN_DATABASE);
+        return new UserResponseDto(updatedUser.get());
     }
 }
