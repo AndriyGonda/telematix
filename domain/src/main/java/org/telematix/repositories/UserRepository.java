@@ -73,7 +73,6 @@ public class UserRepository implements ModelRepository<User> {
         userParameters.put("administrator", item.isAdministrator());
         userParameters.put("first_name", item.getFirstName());
         userParameters.put("last_name", item.getLastName());
-//        userParameters.put("avatar_url", item.getAvatarUrl());
         userParameters.put("user_id", itemId);
         jdbcTemplate.update(UPDATE_USER_QUERY, userParameters);
         return getById(itemId);
