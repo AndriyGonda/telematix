@@ -6,7 +6,27 @@ services:
     build: .
     command: "/usr/src/app/gradlew :web:bootRun"
     container_name: "telematix"
-    ports:
-      - "8080:8080"
     env_file:
       - .env
+    networks:
+      docker-network:
+        aliases:
+          - backend
+    restart: always
+
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - .:/usr/src/app
+    depends_on:
+      - backend
+    networks:
+      - docker-network
+    env_file:
+      - .env
+    ports:
+      - "${CONTAINER_PORT}:80"
+
+networks:
+  docker-network:
