@@ -58,6 +58,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/register",
                         "/api/login"
                 ).permitAll()
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/api/images/**"
+                ).permitAll()
                 .antMatchers("/api/users", "/api/user/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()

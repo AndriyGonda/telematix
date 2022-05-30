@@ -26,6 +26,9 @@ class AuthServiceTest {
     UserRepository userRepository;
 
     @Mock
+    StorageService storageService;
+
+    @Mock
     Authentication authentication;
 
     @Mock
@@ -36,7 +39,7 @@ class AuthServiceTest {
     void setUp() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-        authService = new AuthService(userRepository);
+        authService = new AuthService(userRepository, storageService);
     }
 
     @Test

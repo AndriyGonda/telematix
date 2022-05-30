@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,7 @@ import org.telematix.dto.user.UserResponseDto;
 import org.telematix.security.JwtUtil;
 import org.telematix.services.AuthService;
 import org.telematix.services.ServiceException;
+import org.telematix.services.StorageService;
 import org.telematix.services.UserService;
 
 @Tag(name = "Auth")
@@ -84,10 +86,9 @@ public class AuthController {
 
     @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping(path = "/profile/avatar",
-            consumes = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE}
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
     )
-    public String uploadAvatar(@RequestPart("file") MultipartFile file) {
-        System.out.println(file);
-        return "uploaded";
+    public UserResponseDto uploadAvatar(@RequestParam("file") MultipartFile file) {
+        return authService.updateAvatar(file);
     }
 }
