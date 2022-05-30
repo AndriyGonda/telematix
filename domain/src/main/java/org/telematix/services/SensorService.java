@@ -1,9 +1,13 @@
 package org.telematix.services;
 
 import com.google.gson.Gson;
+import java.io.IOException;
+import java.io.Writer;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.stereotype.Service;
 import org.telematix.dto.GeopositionDto;
 import org.telematix.dto.device.DeviceResponseDto;
@@ -58,7 +62,7 @@ public class SensorService {
             if (optionalSensor.isEmpty()) throw new ItemNotFoundException(SENSOR_WAS_NOT_CREATED);
             return new SensorResponseDto(optionalSensor.get());
         } catch (RepositoryException e) {
-            throw  new ServiceException(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
 
     }
@@ -146,5 +150,16 @@ public class SensorService {
         numbersReportDto.setTotal(values.stream().mapToDouble(value -> value).sum());
         numbersReportDto.setMessages(numberMessages);
         return numbersReportDto;
+    }
+
+    public void writeMessagesToCsv(Writer writer, int deviceId, int sensorId, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        List<TopicMessageDto> messageDtos = getMessagesByInterval(deviceId, sensorId, dateFrom, dateTo);
+        try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
+            for (TopicMessageDto messageDto : messageDtos) {
+                csvPrinter.printRecord(messageDto.getTimestamp(), messageDto.getRaw());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

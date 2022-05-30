@@ -3,8 +3,10 @@ package org.telematix.api.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -110,5 +112,19 @@ public class SensorController {
             @RequestParam("dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTo
     ) {
         return sensorService.getNumbersReport(deviceId, sensorId, dateFrom, dateTo);
+    }
+
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/device/{deviceId}/sensor/{sensorId}/interval/csv")
+    public void exportMessagesByIntervalToCsv(
+            HttpServletResponse servletResponse,
+            @PathVariable("deviceId") int deviceId,
+            @PathVariable("sensorId") int sensorId,
+            @RequestParam("dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTo
+    ) throws IOException {
+        servletResponse.setContentType("text/csv");
+        servletResponse.addHeader("Content-Disposition", "attachment; filename=\"messages.csv\"");
+        sensorService.writeMessagesToCsv(servletResponse.getWriter(), deviceId, sensorId, dateFrom, dateTo);
     }
 }

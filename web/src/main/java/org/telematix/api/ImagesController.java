@@ -1,5 +1,6 @@
 package org.telematix.api;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.telematix.services.StorageService;
 
+@Tag(name = "Images")
 @RestController
 @CrossOrigin()
 @RequestMapping("/api")
