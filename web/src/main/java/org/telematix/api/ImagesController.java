@@ -21,7 +21,7 @@ public class ImagesController {
         this.storageService = storageService;
     }
 
-    @GetMapping(path= "/images/{name:.+}",  produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(path = "/images/{name:.+}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
     public ResponseEntity<Resource> getImage(@PathVariable("name") String name) {
         Resource file = storageService.getImageByName(name);
