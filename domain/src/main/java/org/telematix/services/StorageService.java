@@ -3,7 +3,6 @@ package org.telematix.services;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -63,8 +62,7 @@ public class StorageService {
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
-            }
-            else {
+            } else {
                 throw new ServiceException(COULD_NOT_READ_FILE);
             }
         } catch (MalformedURLException e) {
