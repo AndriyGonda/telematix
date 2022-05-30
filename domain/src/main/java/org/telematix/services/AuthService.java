@@ -43,6 +43,7 @@ public class AuthService {
         Optional<User> optionalUser = getUserByPrincipal();
         if (optionalUser.isEmpty()) throw new ItemNotFoundException(USER_WITH_CURRENT_PRINCIPAL_NOT_FOUND);
         User user = optionalUser.get();
+        userUpdateDto.setAvatarUrl(user.getAvatarUrl());
         userRepository.updateItem(user.getId(), userUpdateDto.toModel());
         Optional<User> databaseUser = userRepository.getById(user.getId());
         if (databaseUser.isEmpty()) throw new ItemNotFoundException(USER_NOT_FOUND_IN_DATABASE);
@@ -54,7 +55,7 @@ public class AuthService {
         if (optionalUser.isEmpty()) throw new ItemNotFoundException(USER_WITH_CURRENT_PRINCIPAL_NOT_FOUND);
         User user = optionalUser.get();
         ProfileUpdateDto profileUpdateDto = new ProfileUpdateDto();
-        profileUpdateDto.setLastName(user.getLastName());
+        profileUpdateDto.setFirstName(user.getFirstName());
         profileUpdateDto.setLastName(user.getLastName());
         String avatarPath = storageService.saveImage(multipartFile);
         profileUpdateDto.setAvatarUrl(FilenameUtils.getName(avatarPath));
