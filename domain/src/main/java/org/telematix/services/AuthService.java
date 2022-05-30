@@ -48,6 +48,7 @@ public class AuthService {
         if (databaseUser.isEmpty()) throw new ItemNotFoundException(USER_NOT_FOUND_IN_DATABASE);
         return new UserResponseDto(databaseUser.get());
     }
+
     public UserResponseDto updateAvatar(MultipartFile multipartFile) {
         Optional<User> optionalUser = getUserByPrincipal();
         if (optionalUser.isEmpty()) throw new ItemNotFoundException(USER_WITH_CURRENT_PRINCIPAL_NOT_FOUND);
