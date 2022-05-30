@@ -6,6 +6,8 @@ services:
     build: .
     command: "/usr/src/app/gradlew :web:bootRun"
     container_name: "telematix"
+    volumes:
+      - ".:/usr/src/app"
     env_file:
       - .env
     networks:
