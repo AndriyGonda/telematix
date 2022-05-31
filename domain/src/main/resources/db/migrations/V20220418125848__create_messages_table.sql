@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS messages
     raw       VARCHAR(255),
     sensor_id int,
     PRIMARY KEY (id),
-    CONSTRAINT fk_sensor FOREIGN KEY (sensor_id) REFERENCES sensors (id)
+    CONSTRAINT fk_sensor FOREIGN KEY (sensor_id) REFERENCES sensors (id) ON DELETE CASCADE
 );
