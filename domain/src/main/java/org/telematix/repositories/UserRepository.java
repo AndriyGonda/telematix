@@ -18,7 +18,7 @@ public class UserRepository implements ModelRepository<User> {
     private static final String SELECT_ALL_USERS = "SELECT * FROM users";
     private static final String USER_ALREADY_EXISTS = "User already exists";
     public static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id=:userId";
-    public static final String UPDATE_USER_QUERY = "UPDATE users SET administrator=:administrator, first_name=:first_name, last_name=:last_name WHERE id=:user_id";
+    public static final String UPDATE_USER_QUERY = "UPDATE users SET first_name=:first_name, last_name=:last_name WHERE id=:user_id";
     public static final String SELECT_USER_BY_USERNAME = "SELECT * FROM users WHERE username=:username";
     public static final String UPDATE_AVATAR_QUERY = "UPDATE users SET avatar_url=:avatar_url WHERE id=:user_id";
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -70,7 +70,6 @@ public class UserRepository implements ModelRepository<User> {
     @Override
     public Optional<User> updateItem(int itemId, User item) {
         Map<String, Object> userParameters = new HashMap<>();
-        userParameters.put("administrator", item.isAdministrator());
         userParameters.put("first_name", item.getFirstName());
         userParameters.put("last_name", item.getLastName());
         userParameters.put("user_id", itemId);

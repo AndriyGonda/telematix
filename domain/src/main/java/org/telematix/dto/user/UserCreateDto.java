@@ -62,6 +62,7 @@ public class UserCreateDto {
         user.setPasswordHash(password);
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setAdministrator(administrator);
         return user;
     }
 
