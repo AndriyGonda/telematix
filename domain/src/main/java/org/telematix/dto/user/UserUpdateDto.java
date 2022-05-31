@@ -14,7 +14,6 @@ public class UserUpdateDto {
         return lastName;
     }
 
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -22,7 +21,6 @@ public class UserUpdateDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
 
     public UserUpdateDto() {
     }
